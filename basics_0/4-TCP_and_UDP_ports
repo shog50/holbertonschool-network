@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
-# Displays listening TCP and UDP ports with the PID and program name
-
-set -euo pipefail
-
-# Use ss (modern replacement for netstat)
-sudo ss -tulnp
+# Script to display listening ports
+netstat -lx -pt
 
