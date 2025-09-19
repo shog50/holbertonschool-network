@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# This script configures the /etc/hosts file so that:
+# - localhost resolves to 127.0.0.2
+# - facebook.com resolves to 8.8.8.8
+
+# Backup the original /etc/hosts
+cp /etc/hosts /etc/hosts.bak
+
+# Use a temporary file for editing
+tmpfile=$(mktemp)
+
+# Replace localhost and facebook.com entries safely
+awk '
+/127\.0\.0\.1[[:space:]]+localhost/ {print "127.0.0.2 localhost"; next}
+/facebook\.com/ {print "8.8.8.8 facebook.com"; next}
+{print}
+END {
+    # If facebook.com was not found, add it
+    if (!found) print "8.8.8.8 facebook.com"
+}' found=0 /etc/hosts > "$tmpfile"
+
+# Replace the original hosts file with the modified one
+mv "$tmpfile" /etc/hosts
+
